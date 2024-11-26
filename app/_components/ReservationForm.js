@@ -2,7 +2,7 @@
 
 import { useReservation } from '@/app/_components/ReservationContext';
 
-function ReservationForm({ cabin }) {
+function ReservationForm({ cabin, user }) {
   const { range } = useReservation();
 
   // CHANGE
@@ -11,7 +11,7 @@ function ReservationForm({ cabin }) {
   return (
     <div className='scale-[1.01]'>
       <div className='flex items-center justify-between px-16 py-2 bg-primary-800 text-primary-300'>
-        <p>Logged in as</p>
+        <p>Logged in {user.name}</p>
 
         {/* <div className='flex items-center gap-4'>
           <img
