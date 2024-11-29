@@ -2,8 +2,8 @@ import { notFound } from 'next/navigation';
 import { eachDayOfInterval } from 'date-fns';
 import { supabase } from './supabase';
 
-/////////////
-// GET
+// ** ------ CABINS ---------- ** //
+// ** GET CABIN
 
 export async function getCabin(id) {
   const { data, error } = await supabase
@@ -24,6 +24,8 @@ export async function getCabin(id) {
   return data;
 }
 
+// ** GET CABIN PRICE
+
 export async function getCabinPrice(id) {
   const { data, error } = await supabase
     .from('cabins')
@@ -37,6 +39,8 @@ export async function getCabinPrice(id) {
 
   return data;
 }
+
+// ** GET CABINS
 
 export const getCabins = async function () {
   const { data, error } = await supabase
@@ -52,6 +56,9 @@ export const getCabins = async function () {
   return data;
 };
 
+// ** ------ GUESTS ---------- ** //
+// ** GET GUEST
+
 // Guests are uniquely identified by their email address
 export async function getGuest(email) {
   const { data, error } = await supabase
@@ -63,6 +70,8 @@ export async function getGuest(email) {
   // No error here! We handle the possibility of no guest in the sign in callback
   return data;
 }
+
+// ** ------ BOOKINGS ---------- ** //
 
 export async function getBooking(id) {
   const { data, error, count } = await supabase
@@ -186,20 +195,20 @@ export async function createBooking(newBooking) {
 // UPDATE
 
 // The updatedFields is an object which should ONLY contain the updated data
-export async function updateGuest(id, updatedFields) {
-  const { data, error } = await supabase
-    .from('guests')
-    .update(updatedFields)
-    .eq('id', id)
-    .select()
-    .single();
+// export async function updateGuest(id, updatedFields) {
+//   const { data, error } = await supabase
+//     .from('guests')
+//     .update(updatedFields)
+//     .eq('id', id)
+//     .select()
+//     .single();
 
-  if (error) {
-    console.error(error);
-    throw new Error('Guest could not be updated');
-  }
-  return data;
-}
+//   if (error) {
+//     console.error(error);
+//     throw new Error('Guest could not be updated');
+//   }
+//   return data;
+// }
 
 export async function updateBooking(id, updatedFields) {
   const { data, error } = await supabase
@@ -219,12 +228,12 @@ export async function updateBooking(id, updatedFields) {
 /////////////
 // DELETE
 
-export async function deleteBooking(id) {
-  const { data, error } = await supabase.from('bookings').delete().eq('id', id);
+// export async function deleteBooking(id) {
+//   const { data, error } = await supabase.from('bookings').delete().eq('id', id);
 
-  if (error) {
-    console.error(error);
-    throw new Error('Booking could not be deleted');
-  }
-  return data;
-}
+//   if (error) {
+//     console.error(error);
+//     throw new Error('Booking could not be deleted');
+//   }
+//   return data;
+// }

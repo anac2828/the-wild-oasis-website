@@ -1,9 +1,14 @@
 import SelectCountry from '@/app/_components/SelectCountry';
 import UpdateProfileForm from '@/app/_components/UpdateProfileForm';
+import { auth } from '@/app/_lib/auth';
+import { getGuest } from '@/app/_lib/data-service';
 
 export const metadata = { title: 'Update profile' };
 
-export default function Page() {
+export default async function Page() {
+  const session = await auth();
+  const guest = await getGuest(session.user.email);
+
   // CHANGE
   const countryFlag = 'pt.jpg';
   const nationality = 'portugal';
@@ -17,13 +22,13 @@ export default function Page() {
         Providing the following information will make your check-in process
         faster and smoother. See you soon!
       </p>
-      <UpdateProfileForm>
+      <UpdateProfileForm guest={guest}>
         {/* Server component that needs to be passsed as a prop to a client component */}
         <SelectCountry
           name='nationality'
           id='nationality'
           className='w-full px-5 py-3 rounded-sm shadow-sm bg-primary-200 text-primary-800'
-          defaultCountry={nationality}
+          defaultCountry={guest.nationality}
         />
       </UpdateProfileForm>
     </div>
