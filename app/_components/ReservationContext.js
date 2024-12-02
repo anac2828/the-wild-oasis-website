@@ -1,5 +1,5 @@
 'use client';
-
+// ReservationContext use in the calendar when making a reservation.
 import { createContext, useContext, useState } from 'react';
 
 const ReservationContext = createContext();

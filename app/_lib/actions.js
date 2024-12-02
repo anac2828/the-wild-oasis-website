@@ -1,6 +1,7 @@
 // Only for server actions not components. Allows client to talk to server.
 'use server';
 
+import { redirect } from 'next/navigation';
 // ** IMPORTS ** //
 // Function from Next-auth
 import { auth, signIn, signOut } from './auth';
@@ -60,6 +61,41 @@ export async function deleteReservation(bookingId) {
   if (error) throw new Error('Booking could not be deleted.');
 
   revalidatePath('/account/reservations');
+}
+
+// ** UPDATE RESERVATION ** //
+
+export async function updateReservation(formData) {
+  const id = formData.get('reservationId');
+  const numGuests = formData.get('numGuests');
+  const observations = formData.get('observations');
+  const updatedFields = { id, numGuests, observations };
+  // Check if user is logged in.
+  const session = await auth();
+  if (!session) throw new Error('You need to be logged in.');
+
+  //Get bookin ids for logged in user
+  const guestBookings = await getBookings(session.user.guestId);
+  const guestBookingsId = guestBookings.map((booking) => booking.id);
+  console.log(guestBookingsId);
+  // Check if user matches the guest id of booking
+  if (!guestBookingsId.includes(+id))
+    throw new Error('You are not allowed to delete this booking');
+
+  const { error } = await supabase
+    .from('bookings')
+    .update(updatedFields)
+    .eq('id', id)
+    .select()
+    .single();
+
+  if (error) {
+    console.error(error);
+    throw new Error('Booking could not be updated');
+  }
+
+  revalidatePath(`/account/reservation/edit/${id}`);
+  redirect('/account/reservations');
 }
 
 // ** SIGN IN AND OUT ** //

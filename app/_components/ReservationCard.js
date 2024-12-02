@@ -35,6 +35,7 @@ function ReservationCard({ booking }) {
       </div>
 
       <div className='flex flex-col flex-grow px-6 py-3'>
+        <p className='text-primary-500'>Reservation #{id}</p>
         <div className='flex items-center justify-between'>
           <h3 className='text-xl font-semibold'>
             {numNights} nights in Cabin {name}
@@ -73,6 +74,13 @@ function ReservationCard({ booking }) {
       <div className='flex flex-col border-l border-primary-800 w-[100px]'>
         {!isPast(startDate) ? (
           <>
+            {/* 1. Implement route -- done
+                2. Use Reservation edit page -- done
+                    a) Get current booking using the getBooking function in data-service.js -- done
+                3. Create server action updateReservation -- done
+                4. Ad action to form and pass all fields with correct name fields
+            
+            */}
             <Link
               href={`/account/reservations/edit/${id}`}
               className='flex items-center flex-grow gap-2 px-3 text-xs font-bold uppercase transition-colors border-b group text-primary-300 border-primary-800 hover:bg-accent-600 hover:text-primary-900'
