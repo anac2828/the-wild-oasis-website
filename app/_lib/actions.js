@@ -1,8 +1,8 @@
 // Only for server actions not components. Allows client to talk to server.
 'use server';
 
-import { redirect } from 'next/navigation';
 // ** IMPORTS ** //
+import { redirect } from 'next/navigation';
 // Function from Next-auth
 import { auth, signIn, signOut } from './auth';
 import { getBookings } from './data-service';
@@ -66,10 +66,8 @@ export async function deleteReservation(bookingId) {
 // ** UPDATE RESERVATION ** //
 
 export async function updateReservation(formData) {
-  const id = formData.get('reservationId');
-  const numGuests = formData.get('numGuests');
-  const observations = formData.get('observations');
-  const updatedFields = { id, numGuests, observations };
+  const bookingId = formData.get('reservationId');
+
   // Check if user is logged in.
   const session = await auth();
   if (!session) throw new Error('You need to be logged in.');
@@ -77,24 +75,34 @@ export async function updateReservation(formData) {
   //Get bookin ids for logged in user
   const guestBookings = await getBookings(session.user.guestId);
   const guestBookingsId = guestBookings.map((booking) => booking.id);
-  console.log(guestBookingsId);
+
   // Check if user matches the guest id of booking
-  if (!guestBookingsId.includes(+id))
-    throw new Error('You are not allowed to delete this booking');
+  if (!guestBookingsId.includes(+bookingId))
+    throw new Error('You are not allowed to update this booking');
+
+  // Update defaultValue
+  const updatedFields = {
+    numGuests: formData.get('numGuests'),
+    observations: formData.get('observations').slice(0, 1000), // selects the first 1000 characters of the text area input in the form to protect againts malicious submitions.
+  };
 
   const { error } = await supabase
     .from('bookings')
     .update(updatedFields)
-    .eq('id', id)
+    .eq('id', bookingId)
     .select()
     .single();
 
+  // Error handling
   if (error) {
     console.error(error);
     throw new Error('Booking could not be updated');
   }
 
-  revalidatePath(`/account/reservation/edit/${id}`);
+  // Revalidate data
+  revalidatePath(`/account/reservations/edit/${bookingId}`);
+
+  // Redirecting
   redirect('/account/reservations');
 }
 

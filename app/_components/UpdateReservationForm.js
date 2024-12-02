@@ -1,6 +1,7 @@
 'use client';
-import { useFormStatus } from 'react-dom';
+
 import { updateReservation } from '@/app/_lib/actions';
+import SubmitButton from '@/app/_components/SubmitButton';
 
 function UpdateReservationForm({
   reservationId,
@@ -46,21 +47,11 @@ function UpdateReservationForm({
       </div>
 
       <div className='flex items-center justify-end gap-6'>
-        <Button />
+        <SubmitButton pedingLabel='...Updating reservation'>
+          Update reservation
+        </SubmitButton>
       </div>
     </form>
-  );
-}
-
-function Button() {
-  const { pending } = useFormStatus();
-  return (
-    <button
-      disabled={pending}
-      className='px-8 py-4 font-semibold transition-all bg-accent-500 text-primary-800 hover:bg-accent-600 disabled:cursor-not-allowed disabled:bg-gray-500 disabled:text-gray-300'
-    >
-      {pending ? '....Updating' : 'Update reservation'}
-    </button>
   );
 }
 
